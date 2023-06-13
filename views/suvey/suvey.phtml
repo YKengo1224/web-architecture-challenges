@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>アンケート</title>
+    <script src="views/suvey/script.js"></script>
+  </head>
+  <body>
+    <center>
+      <h1>プログラミング経験に関するアンケート</h1><br>
+      <form method="POST" action="index.php?event=ReceiveSuvey">
+        <p>質問１:あなたはプログラミングの経験がありますか？</p>
+        <label><input type="radio" name="experience" value="Yes" onclick="ShowNextQuestion()">はい</label>
+        <label><input type="radio" name="experience" value="No" onclick="ResetSecondQuestion()">いいえ</label><br><br>
+
+        <div id="second_question" style="display: none;">
+          <p>質問1.2:使用したことのある言語と，使用年数，その言語の習得レベルを教えてください．(〇〇を開発など) </p>
+          <div id="text_box_container">
+            言語1:
+            <input type="text" name="lang[]" placeholder="言語1">
+            <input type="text" name="year[]" placeholder="言語1の使用年数">
+            <input type="text" name="level[]" placeholder="言語1の習得レベル">
+          </div>
+          <button type="button" onclick="addTextBox()">追加</button>
+        </div><br>
+
+	<p>質問2:あなたが学習したいプログラミング言語を選択してください．</p>
+	<label><input type="checkbox" name="WontToStudy[]" value="C">C</label><br>
+	<label><input type="checkbox" name="WontToStudy[]" value="C++">C++</label><br>
+	<label><input type="checkbox" name="WontToStudy[]" value="Python">Python</label><br>
+	<label><input type="checkbox" name="WontToStudy[]" value="Java">Java</label><br>
+	<label><input type="checkbox" name="WontToStudy[]" value="PHP">PHP</label><br>
+        <input type="submit" value="送信">
+      </form>
+    </center>
+  </body>
+</html>

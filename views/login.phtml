@@ -1,0 +1,49 @@
+<?php
+
+if(isset($view['code'])){
+    switch($view['code']){
+        case 'NoEnterEmail':
+            $ErrorCode = 'error:メールアドレスを入力してください';
+            break;
+        case 'NoEnterPassword':
+            $ErrorCode = 'パスワードを入力してください';
+            break;
+        case 'NotMatchEmail':
+            $ErrorCode = '入力されたメールアドレスは登録されていません.';
+            break;
+        case 'NotMatchPassword':
+            $ErrorCode = 'パスワードが一致しません';
+            break;
+        default:
+            $ErrorCode = '予期せぬエラーです';
+    }
+}
+?>
+
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>〇〇へようこそ!</title>
+  </head>
+  <body>
+    <center>
+      <h1>〇〇へようこそ！</h1><br>
+      このサイトを利用するには会員登録が必要となります．<br>
+      会員登録がお住みでない方はページ下部のボタンからご登録ください！<br><br>
+      <?php echo '<span style="color: red;">' . htmlspecialchars($ErrorCode) . '</span>'; ?>
+      <form method="POST" action="index.php?event=receiveLogin">
+	ID(メールアドレス): <input type="text" name="email",value="<?=htmlspecialchars(view['email'])?>"><br>
+	パスワード:<input type="password" name="password",value="<?=htmlspecialchars(view['password'])?>"><br>
+	<input type="submit" value="ログイン"><br><br>
+      </form>
+
+      会員登録がお済みでない方はこちらから
+	<form method="POST" action="index.php?event=MemberShip">
+	  <input type="submit" value="会員登録">
+	</form>
+
+  </body>
+
+</html>

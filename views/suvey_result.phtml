@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>アンケート結果</title>
+    <style>
+      strong {
+      font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <center>
+      <h1>結果</h1><br>
+      プログラミング経験:<?echo $view['experience']; ?> <br>
+      <?
+       foreach($view['lang'] as $animal_name){
+       echo '<span>'. $animal_name . '</span> ';
+       }
+      ?>
+      <form method="POST" action="index.php?event=login">
+	  <input type="submit" value="ログインページへ">
+	</form>
+
+  </body>
+
+</html>

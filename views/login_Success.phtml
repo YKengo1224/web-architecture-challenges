@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>ログイン完了</title>
+    <style>
+      strong {
+      font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <center>
+      <h1>会員登録</h1><br>
+      ようこそ！<strong><?echo $_SESSION['email'];?></strong>さん!
+      <p>このサイトを利用するためにはまずはじめに,プログラミング経験についてのアンケート
+	に回答していただく必要があります．<br>下記の回答ボタンからアンケートをお答えください．
+      </p>
+     <form method="POST" action="index.php?event=login">
+	  <input type="submit" value="ログインページへ">
+	</form>
+
+  </body>
+
+</html>
