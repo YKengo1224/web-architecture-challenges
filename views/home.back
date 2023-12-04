@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>ログイン完了</title>
+    <style>
+      strong {
+      font-weight: bold;
+      }
+    </style>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+     <link rel ="stylesheet" type="text/css" href="views/style.css">
+  </head>
+  <body>
+    <center>
+      <h1>HOME</h1><br>
+      ようこそ！<strong><?echo $_SESSION['email'];?></strong>さん!
+     <form method="POST" action="index.php?event=EditSuvey">
+	  <input type="submit" value="アンケートを編集">
+     </form>
+
+
+
+     <form method="POST" onsubmit="SendData(event)">
+       使用したい言語
+       <input type="text" id="lang" name="lang"><br>
+       作りたいアプリケーション
+       <input type="text" id="app" name="app"><br>
+       <input type="submit" value="ワークフロー">
+     </form>
+
+     <div id="displayArea"></div>
+     
+  </body>
+
+  <script>
+    var ws;
+    function SendData(event){
+	event.preventDefault();	
+	ws = new WebSocket("ws://172.19.0.4:8081/flow");	
+	ws.onopen = function() {
+            // フォームのデータを取得
+            var lang = document.getElementById('lang').value;
+            var app = document.getElementById('app').value;
+	    var email = "<?php echo $_SESSION['email'];?>";
+	    
+            // データをJSON形式に変換
+            var data = JSON.stringify({email,lang: lang, app: app});
+
+            // データをWebSocket接続を通じて送信
+            ws.send(data);
+
+	    ws.addEventListener("message",
+				function(e) {
+				    // 受信結果を表示
+				    var dataFromServer = JSON.parse(e.data);
+				    
+				    // HTMLに表示する領域の要素を取得します。
+				    var displayArea = document.getElementById("displayArea");
+				    // document.getElementById("displayarea").innerHTML =
+				    // 	document.getElementById("displayarea").innerHTML + e.data + "<br>";
+
+				    // 配列の各要素をHTMLに表示します。
+				    for (var i = 0; i < dataFromServer.length; i++) {
+				        // 新しいp要素を作成します。
+				        var newElement = document.createElement("p");
+				        // p要素のテキストを設定します。
+				        newElement.textContent = dataFromServer[i];
+				        // p要素を表示領域に追加します。
+				        displayArea.appendChild(newElement);
+				    }
+				}
+			       );
+
+	};
+    }
+    
+  </script>
+  
+</html>

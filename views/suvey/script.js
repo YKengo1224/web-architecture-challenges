@@ -21,11 +21,11 @@ function addTextBox() {
     var textBoxContainer = document.getElementById("text_box_container");
     var textBoxSet = document.createElement("div");
     textBoxSet.innerHTML = `
-        言語${counter}:
-        <input type="text" name="lang[]" placeholder="言語${counter}">
-        <input type="text" name="year[]" placeholder="言語${counter}の使用年数">
-        <input type="text" name="level[]" placeholder="言語${counter}の習得レベル">
-        <button type="button" onclick="removeTextBox(this)">削除</button>
+        <label for="language${counter}">言語${counter}:<br></label>
+        <input type="text" class="form-control" name="lang[]" placeholder="言語${counter}">
+        <input type="text" class="form-control" name="year[]" placeholder="言語${counter}の使用年数">
+        <input type="text" class="form-control" name="level[]" placeholder="言語${counter}の習得レベル">
+        <button type="button"  class= "btn btn-danger" onclick="removeTextBox(this)">削除</button>
       `;
     textBoxContainer.appendChild(textBoxSet);
     counter++;

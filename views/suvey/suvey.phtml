@@ -1,3 +1,66 @@
+<?php
+if(($error==1)){
+    $ErrorCode = 'プログラミング経験を’はい’に選択した場合，質問２の使用言語は必ず１つ記入してください';
+}
+
+?>
+
+
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>アンケート</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+     <link rel ="stylesheet" type="text/css" href="views/style.css">
+    <script src="views/suvey/script.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <h1 class="text-center mt-5">プログラミング経験に関するアンケート</h1>
+	  <?php if(isset($ErrorCode)):?>
+	  <div class="alert alert-danger">
+	    <?= htmlspecialchars($ErrorCode)?>
+	  </div>
+	  <?php endif; ?>
+    <form method="POST" action="index.php?event=ReceiveSuvey">
+            <div class="form-group">
+              <p>質問１:あなたはプログラミングの経験がありますか？</p>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="experience" id="experienceYes" value="Yes" onclick="ShowNextQuestion()">
+                <label class="form-check-label" for="experienceYes">はい</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="experience" id="experienceNo" value="No" onclick="ResetSecondQuestion()">
+                <label class="form-check-label" for="experienceNo">いいえ</label>
+              </div>
+            </div>
+
+            <div id="second_question" style="display: none;">
+              <p>質問1.2:使用したことのある言語と，使用年数，その言語の習得レベルを教えてください．(〇〇を開発など) </p>
+              <div id="text_box_container" class="form-group">
+                言語1:
+                <input type="text" class="form-control" name="lang[]" placeholder="言語1">
+                <input type="text" class="form-control" name="year[]" placeholder="言語1の使用年数">
+                <input type="text" class="form-control" name="level[]" placeholder="言語1の習得レベル">
+              </div>
+              <button type="button" class="btn btn-secondary" onclick="addTextBox()">追加</button>
+            </div>
+	      <div class="text-center mt-4">
+		<input class="btn btn-primary d-inline-block" type="submit" value="送信">
+	      </div>
+	  </form>
+	</div>
+      </div>
+    </div>
+  </body>
+</html>
+
+<!--
 <!DOCTYPE html>
 <html>
   <head>
@@ -35,3 +98,4 @@
     </center>
   </body>
 </html>
+-->

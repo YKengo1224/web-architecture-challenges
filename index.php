@@ -6,6 +6,9 @@
 require_once "actions/DBConnect.php";
 require_once "actions/UserTableAction.php";
 require_once "actions/SuveyAction.php";
+require_once "actions/DeepL.php";
+require_once "actions/GPT3.5.php";
+require_once "actions/LearningFlow.php";
 
 session_start();
 
@@ -29,7 +32,7 @@ switch($event){
                 require './views/first_login.phtml';
             }
             else{
-                require './views/home.phtml';
+                require './views/home.html';
             }
         }
         break;
@@ -52,8 +55,34 @@ switch($event){
     case 'ReceiveSuvey':
         $view = $_POST;
         $view['email'] = $_SESSION['email'];
-        INSERTExperience($view);
-        require './views/suvey_result.phtml';
+        $error = INSERTSuvey($view);
+        if($error == 1){
+            require  './views/suvey/suvey.phtml';
+        }
+        else{
+            require './views/home.html';
+        }
+        break;
+    case 'EditSuvey':
+        $view = SELECTSuvey($_SESSION['email']);
+        require './views/suvey/EditSurvey.phtml';
+        break;
+    case 'EditSuveyComp':
+        $view = $_POST;
+        $view['email'] = $_SESSION['email'];
+        $error = UPDATESuvey($view);
+        if($error == 1){
+            $view = SELECTSuvey($_SESSION['email']);
+            require './views/suvey/EditSurvey.phtml';
+        }
+        else{
+            require './views/home.html';
+        }
+        break;
+    case 'logout':
+        $_SESSION = array();
+        session_destroy();
+        require './views/login.phtml';
         break;
     default:
         die("evnet error:ホームページ管理者にお問い合わせください.");

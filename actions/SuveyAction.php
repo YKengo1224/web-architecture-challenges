@@ -1,28 +1,77 @@
 <?php
 
 
-// function SELECTuser($view){
-//     $dbh = ConnectDB();
-//     $sql = 'SELECT * FROM User WHERE email = :email';
-//     $stmt = $dbh->prepare($sql);
+function INSERTEIs($view){
+    $dbh = ConnectDB();
 
-//     $stmt->bindValue(':email',$view['email'],PDO::PARAM_STR);
-//     $stmt->execute();
+    $email = $view['email'];
+    if(strcmp($view['experience'],'Yes')==0){
+        $Is = 1;
+    }
+    else
+        $Is = 0;
 
-//     $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    $sql = 'INSERT INTO suvey_IsExperience (email,IsExperience) VALUES (:email,:Is)';
+    $stmt = $dbh->prepare($sql);
 
-//     return $result;
-// }
+    $stmt->execute(array(':email' => $email,':Is'=>$Is));
 
+
+
+    if ($stmt->errorCode() !== '00000') {
+        $errorInfo = $stmt->errorInfo();
+        echo "エラー: " . $errorInfo[2];
+        exit();
+    }
+}
+
+function SELECTIs($email){
+    $dbh = ConnectDB();
+    $sql = 'SELECT Isexperience FROM suvey_IsExperience WHERE  email = :email';
+
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute(array(':email' => $email));
+
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $result;
+
+}
+
+function UPDATEIs($view){
+    $dbh = ConnectDB();
+
+    $email = $view['email'];
+
+    if(strcmp($view['experience'],'Yes')==0)
+        $Is = 1;
+    else
+        $Is = 0;
+
+    $sql = 'UPDATE suvey_IsExperience SET IsExperience = :Is WHERE email = :email';
+
+    $stmt = $dbh->prepare($sql);
+
+    $stmt->execute(array(':Is' => $Is,':email'=>$email));
+
+    if ($stmt->errorCode() !== '00000') {
+        $errorInfo = $stmt->errorInfo();
+        echo "エラー: " . $errorInfo[2];
+        exit();
+    }
+
+}
 
 
 function INSERTExperience($view){
-    $dbh = ConnectDB();
 
     $email = $view['email'];
     $langs = $view['lang'];
     $years = $view['year'];
     $levels = $view['level'];
+
+
+    $dbh = ConnectDB();
 
     for ($i = 0; $i < count($langs); $i++) {
         $lang = $langs[$i];
@@ -41,100 +90,95 @@ function INSERTExperience($view){
     }
 }
 
+function DELETEExperience($email){
+    $dbh = ConnectDB();
 
-// function UpdateNumAccess($result,$count){
-//     $dbh = ConnectDB();
-
-//     $sql = 'UPDATE User SET num_access = :num_access WHERE  email = :email';
-//     $stmt = $dbh->prepare($sql);
-//     $stmt->bindValue(':email',$result['email'],PDO::PARAM_STR);
-//     $stmt->bindValue(':num_access',$count,PDO::PARAM_INT);
-//     $stmt->execute();
-
-// }
+    $sql = 'DELETE FROM suvey_Experience WHERE email = :email';
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute(array(':email' => $email));
 
 
-// function CheckLogin(){
-//     $return = [];
-//     $email = filter_input(INPUT_POST,'email');
-//     $password = filter_input(INPUT_POST,'password');
-//     $view['email'] = $email;
-//     $view['password'] = $email;
-
-//     if(empty($email)){
-//         $return['isError'] = 1;
-//         $return['code'] = 'NoEnterEmail';
-//         return $return;
-//     }
-//     if(empty($password)){
-//         $return['isError'] = 1;
-//         $return['code'] = 'NoEnterPassword';
-//         return $return;
-//     }
-
-//     $result = SELECTuser($view);
-//     if(!$result){
-//         $return['isError'] = 1;
-//         $return['code'] = 'NotMatchEmail';
-//         return $return;
-//     }
-
-//     else{
-//         if(password_verify($password,$result['password'])){
-//             $access = $result['num_access'] + 1;
-//             if($access == 1) $return['first'] = 1;
-
-//             UpdateNumAccess($result,$access);
-//             $return['isError'] = 0;
-//             $return['email'] = $result['email'];
-//             return $return;
-//         }
-//         else{
-//             $return['isError'] = 1;
-//             $return['code'] = 'NotMatchPassword';
-//             return $return;
-//         }
-//     }
-// }
+    if ($stmt->errorCode() !== '00000') {
+        $errorInfo = $stmt->errorInfo();
+        echo "エラー: " . $errorInfo[2];
+        exit();
+    }
+}
 
 
+function SELECTSuvey($email){
+    $dbh = ConnectDB();
 
-// function isMembershipAvailable(){
-//     $return = [];
-//     $email = filter_input(INPUT_POST,'email');
-//     $password = filter_input(INPUT_POST,'password');
-//     $view['email'] = $email;
-//     $view['password'] = $email;
+    $Is = SELECTIs($email);
 
-//     if(empty($email)){
-//         $return['isError'] = 1;
-//         $return['code'] = 'NoEnterEmail';
-//         return $return;
-//     }
-//     if(empty($password)){
-//         $return['isError'] = 1;
-//         $return['code'] = 'NoEnterPassword';
-//         return $return;
-//     }
+    $sql = <<<EOM
+        SELECT E.language,E.years,E.level FROM suvey_Experience E LEFT OUTER JOIN suvey_IsExperience i ON E.email = i.email  WHERE E.email=:email;
+        EOM;
 
-//     if(strcmp($_POST['password'],$_POST['password2']) != 0){
-//         $return['isError'] = 1;
-//         $return['code'] = 'DifferentPassword';
-//         return $return;
-//     }
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute(array(':email'=>$email));
+    //$stmt->execute();
+    $result = $stmt->fetchall(PDO::FETCH_ASSOC);
+    $result[0]['IsExperience'] = $Is['Isexperience'];
+
+    if ($stmt->errorCode() !== '00000') {
+        $perrorInfo = $stmt->errorInfo();
+        echo "エラー: " . $errorInfo[2];
+        exit();
+    }
 
 
-//     $result = SELECTuser($view);
-//     if(!$result){
-//         INSERTuser($view);
-//         $return['isError'] = 0;
-//         return $return;
-//     }
-//     else{
-//         $return['isError'] = 1;
-//         $return['code'] = 'AlreadyRegstrationEmail';
-//         return $return;
-//     }
-//}
+    // foreach($result as $i){
+    //     print_r($i);
+    //     echo $i['IsExperience'];
+    // }
+    return $result;
+}
+
+
+function INSERTSuvey($view){
+    if(strcmp($view['experience'],"Yes")==0){
+        if(empty($view['lang'][0])){
+            $error = 1;
+        }
+        else{
+            INSERTEIs($view);
+            INSERTExperience($view);
+            $error=0;
+        }
+    }
+    else{
+        INSERTEIs($view);
+        $error=0;
+    }
+
+    return $error;
+}
+
+
+function UPDATESuvey($view) {
+    if((strcmp($view['experience'],"Yes")==0) && (empty($view['lang'][0]))){
+        $error = 1;
+    }
+    else{
+        $pre = SELECTIs($view['email']);
+
+        if($pre['Isexperience'] == 1)
+            $Is = 'Yes';
+        else
+            $Is = 'No';
+
+
+        if(strcmp($Is,$view['experience'])!=0){
+            UPDATEIs($view);
+        }
+
+        DELETEExperience($view['email']);
+        if($view['experience']=='Yes'){
+            INSERTExperience($view);
+        }
+    }
+    return $error;
+}
 
 ?>

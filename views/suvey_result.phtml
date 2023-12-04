@@ -12,15 +12,9 @@
   <body>
     <center>
       <h1>結果</h1><br>
-      プログラミング経験:<?echo $view['experience']; ?> <br>
-      <?
-       foreach($view['lang'] as $animal_name){
-       echo '<span>'. $animal_name . '</span> ';
-       }
-      ?>
-      <form method="POST" action="index.php?event=login">
-	  <input type="submit" value="ログインページへ">
-	</form>
+      <form method="POST" action="index.php?event=EditSuvey">
+	<input type="submit" value="アンケート結果へ">
+      </form>
 
   </body>
 

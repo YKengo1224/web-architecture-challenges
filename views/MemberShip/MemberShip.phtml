@@ -19,6 +19,54 @@ if(isset($view['code'])){
 }
 ?>
 
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>会員登録</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+     <link rel ="stylesheet" type="text/css" href="views/style.css">
+  </head>
+  <body>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <h1 class="text-center mt-5">会員登録</h1>
+          <p class="text-center">登録するメールアドレスとパスワードをご入力ください</p>
+          <?php if(isset($ErrorCode)): ?>
+            <div class="alert alert-danger">
+              <?= htmlspecialchars($ErrorCode) ?>
+            </div>
+          <?php endif; ?>
+          <form method="POST" action="index.php?event=ReceiveRegstration">
+            <div class="form-group">
+              <label for="email">メールアドレス:</label>
+              <input type="text" class="form-control" id="email" name="email">
+            </div>
+            <div class="form-group">
+              <label for="password">パスワード:</label>
+              <input type="password" class="form-control" id="password" name="password">
+            </div>
+            <div class="form-group">
+              <label for="password2">確認のため、パスワードをもう一度ご入力ください:</label>
+              <input type="password" class="form-control" id="password2" name="password2">
+            </div>
+            <button type="submit" class="btn btn-primary">登録</button>
+          </form>
+          <p class="text-center mt-3">
+            <form method="POST" action="index.php?event=login">
+              <button type="submit" class="btn btn-secondary">ログインページに戻る</button>
+            </form>
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+<!--
 <!DOCTYPE html>
 <html>
   <head>
@@ -44,3 +92,4 @@ if(isset($view['code'])){
   </body>
 
 </html>
+!-->

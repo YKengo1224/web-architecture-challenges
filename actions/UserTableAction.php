@@ -18,7 +18,6 @@ function SELECTuser($view){
 
 function INSERTuser($view){
     $dbh = ConnectDB();
-
     $sql = 'INSERT INTO User (email,password) VALUES (:email,:password)';
     $stmt = $dbh->prepare($sql);
 
@@ -94,7 +93,7 @@ function isMembershipAvailable(){
     $email = filter_input(INPUT_POST,'email');
     $password = filter_input(INPUT_POST,'password');
     $view['email'] = $email;
-    $view['password'] = $email;
+    $view['password'] = $password;
 
     if(empty($email)){
         $return['isError'] = 1;
